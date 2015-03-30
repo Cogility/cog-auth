@@ -6,7 +6,7 @@ accessing a Cogility Node server.
 
 ## Installation
 
-* `ember install:addon CogAuth`
+* `ember install:addon cog-auth`
 
 * Follow Ember-CLI-Simple-Auth install instructions to use the provided authorizer and authenticator
 
