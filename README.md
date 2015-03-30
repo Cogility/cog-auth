@@ -1,25 +1,17 @@
 # Cog-auth
 
-This README outlines the details of collaborating on this Ember addon.
+This add on provides Ember-CLI-Simple-Auth compatible
+authenticator and authorizer classes for use in Ember apps
+accessing a Cogility Node server.
 
 ## Installation
 
-* `git clone` this repository
-* `npm install`
-* `bower install`
+* `ember install:addon CogAuth`
 
-## Running
-
-* `ember server`
-* Visit your app at http://localhost:4200.
+* Follow Ember-CLI-Simple-Auth install instructions to use the provided authorizer and authenticator
 
 ## Running Tests
 
-* `ember test`
+* clone repository
+* `ember test`, or
 * `ember test --server`
-
-## Building
-
-* `ember build`
-
-For more information on using ember-cli, visit [http://www.ember-cli.com/](http://www.ember-cli.com/).
