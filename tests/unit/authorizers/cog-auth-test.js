@@ -5,9 +5,9 @@ import Pretender from 'pretender';
 
 var application, server;
 
-moduleFor('authorizer:cogility', {
+moduleFor('authorizer:cog-auth', {
   // Specify the other units that are required for this test.
-  needs: ['service:cogility']
+  needs: ['service:cog-auth']
 });
 
 // Verify the module can be instanced

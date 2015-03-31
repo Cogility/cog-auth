@@ -1,12 +1,13 @@
-// addon/cogility/authenticators
+// addon/cog-auth/authenticators
 
 import Base from 'simple-auth/authenticators/base';
 import Ember from 'ember';
 
 /* global jQuery */
+/* jshint unused:vars */
 
 export default Base.extend({
-  user: Ember.inject.service('cogility'),
+  user: Ember.inject.service('cog-auth'),
   flashes: Ember.inject.service('flash-messages'),
 
   restore: function(data) {
@@ -36,6 +37,7 @@ export default Base.extend({
             });
           },
           error: function (jqXHR, textStatus, error) {
+            /*jshint unused:vars */
             Ember.run(function() {
               flashService.danger('Restore Session Failed');
               userService.set('token', null);
@@ -85,6 +87,7 @@ export default Base.extend({
             });
           },
           error: function (jqXHR, textStatus, error) {
+            /*jshint unused:vars */
             Ember.run(function() {
               flashService.danger('Login Failed');
               userService.set('token', null);

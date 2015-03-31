@@ -3,7 +3,7 @@ import {
   test
   } from 'ember-qunit';
 
-moduleFor('service:cogility', {
+moduleFor('service:cog-auth', {
   // Specify the other units that are required for this test.
   // needs: ['service:foo']
 });

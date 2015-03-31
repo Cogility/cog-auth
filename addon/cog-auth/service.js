@@ -1,4 +1,4 @@
-// addon/cogility/service
+// addon/cot-auth/service
 //
 // A service for interacting with the current user, changing password, current roles, etc.
 

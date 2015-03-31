@@ -1,10 +1,10 @@
-// addon/cogility/authorizer
+// addon/cog-auth/authorizer
 
 import Base from 'simple-auth/authorizers/base';
 import Ember from 'ember';
 
 export default Base.extend({
-  user: Ember.inject.service('cogility'),
+  user: Ember.inject.service('cog-auth'),
   authorize: function(jqXHR, requestOptions) {
     /*jshint unused:vars */
     var userService = this.get('user');
