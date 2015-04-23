@@ -1,4 +1,4 @@
 // app/cog-auth/authenticators
 
-import Auth from 'cog-auth/cog-auth/authenticator';
+import Auth from 'cog-auth/cog-auth/authorizer';
 export default Auth;
