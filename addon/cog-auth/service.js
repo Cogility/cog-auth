@@ -6,5 +6,7 @@ import Ember from 'ember';
 
 export default Ember.Service.extend({
   userName: null,
+  userDetails: null,
+  modelName: null,
   token: null
 });

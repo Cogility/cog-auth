@@ -30,8 +30,11 @@ export default Base.extend({
                 //console.log('####   Restore Response data: ' + JSON.stringify(data));
                 reject();
               } else {
+                //console.log('@@@@ Restore UserName: '+options.identification+' token: '+data.token);
                 userService.set('userName', options.identification);
                 userService.set('token', data.token);
+                userService.set('userDetails', data.user);
+                userService.set('modelName', data.modelName);
                 resolve({identification: options.identification, password: options.password});
               }
             });
@@ -42,7 +45,9 @@ export default Base.extend({
               flashService.danger('Restore Session Failed');
               userService.set('token', null);
               userService.set('userName', null);
-              console.log('#### Error in authentication: ' + textStatus + ' ' + error);
+              if (jqXHR.status !== 401 && jqXHR.status !== 403) {
+                console.log('#### Error in authentication: ' + textStatus + ' ' + error);
+              }
               reject(error);
             });
           },
@@ -78,9 +83,12 @@ export default Base.extend({
                 reject();
               } else {
                 Ember.run(function () {
+                  //console.log('@@@@ Login UserName: '+options.identification+' token: '+data.token);
                   userService.set('userName', options.identification);
                   flashService.success('Login Successful', {timeout: 5000});
                   userService.set('token', data.token);
+                  userService.set('userDetails', data.user);
+                  userService.set('modelName', data.modelName);
                   resolve({identification: options.identification, password: options.password});
                 });
               }
@@ -92,7 +100,9 @@ export default Base.extend({
               flashService.danger('Login Failed');
               userService.set('token', null);
               userService.set('userName', null);
-              console.log('#### Error in authentication: ' + textStatus + ' ' + error);
+              if (jqXHR.status !== 401 && jqXHR.status !== 403) {
+                console.log('#### Error in authentication: ' + textStatus + ' ' + error);
+              }
               reject(error);
             });
           },
