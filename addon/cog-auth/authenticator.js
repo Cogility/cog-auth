@@ -1,6 +1,6 @@
 // addon/cog-auth/authenticators
 
-import Base from 'simple-auth/authenticators/base';
+import Base from 'ember-simple-auth/authenticators/base';
 import Ember from 'ember';
 
 /* global jQuery */
@@ -17,9 +17,11 @@ export default Base.extend({
       try {
         var options = data;
         var loginPath = '/security/login';
+        let authData = {username: options.identification, password: options.password};
+        console.log('@@@@ Restore with ',authData);
         jQuery.ajax(loginPath, {
           type: 'POST',
-          data: {username: options.identification, password: options.password},
+          data: authData,
           success: function (data, textStatus /*, jqXHR */) {
             Ember.run(function() {
               //console.log('@@@@ Restore Authentication with: ' + JSON.stringify(options) + ' Current user: ' + userService.get('userName') + ' status: ' + textStatus + ' token: ' + data.token);
@@ -63,15 +65,17 @@ export default Base.extend({
     });
   },
 
-  authenticate: function(options) {
+  authenticate: function(identification, password) {
     var userService = this.get("user");
     var flashService = this.get('flashes');
     return new Ember.RSVP.Promise(function(resolve, reject) {
       try {
         var loginPath = '/security/login';
+        let authData = {username: identification, password: password};
+        console.log('@@@@ Auth with ',authData);
         jQuery.ajax(loginPath, {
           type: 'POST',
-          data: {username: options.identification, password: options.password},
+          data: authData,
           success: function (data, textStatus /*, jqXHR */) {
             Ember.run(function() {
               //console.log('@@@@ Login Authentication with: ' + JSON.stringify(options) + ' Current user: ' + userService.get('userName') + ' status: ' + textStatus + ' token: ' + data.token);
@@ -84,12 +88,12 @@ export default Base.extend({
               } else {
                 Ember.run(function () {
                   //console.log('@@@@ Login UserName: '+options.identification+' token: '+data.token);
-                  userService.set('userName', options.identification);
+                  userService.set('userName', identification);
                   flashService.success('Login Successful', {timeout: 5000});
                   userService.set('token', data.token);
                   userService.set('userDetails', data.user);
                   userService.set('modelName', data.modelName);
-                  resolve({identification: options.identification, password: options.password});
+                  resolve({identification: identification, password: password});
                 });
               }
             });
