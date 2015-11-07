@@ -18,7 +18,6 @@ export default Base.extend({
         var options = data;
         var loginPath = '/security/login';
         let authData = {username: options.identification, password: options.password};
-        console.log('@@@@ Restore with ',authData);
         jQuery.ajax(loginPath, {
           type: 'POST',
           data: authData,
@@ -72,7 +71,6 @@ export default Base.extend({
       try {
         var loginPath = '/security/login';
         let authData = {username: identification, password: password};
-        console.log('@@@@ Auth with ',authData);
         jQuery.ajax(loginPath, {
           type: 'POST',
           data: authData,

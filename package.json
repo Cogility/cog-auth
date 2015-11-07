@@ -1,6 +1,6 @@
 {
   "name": "cog-auth",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Ember-CLI-Simple-Auth authenticator and authorizer for Cogility Node servers",
   "directories": {
     "doc": "doc",
