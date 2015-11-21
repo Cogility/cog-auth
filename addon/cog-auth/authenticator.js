@@ -21,9 +21,11 @@ export default Base.extend({
         jQuery.ajax(loginPath, {
           type: 'POST',
           data: authData,
-          success: function (data, textStatus /*, jqXHR */) {
+          success: function (data, textStatus, jqXHR) {
             Ember.run(function() {
-              //console.log('@@@@ Restore Authentication with: ' + JSON.stringify(options) + ' Current user: ' + userService.get('userName') + ' status: ' + textStatus + ' token: ' + data.token);
+              userService.set('lastStatus', jqXHR.status);
+              userService.set('lastResponse', jqXHR.responseBody);
+              console.log('@@@@ Restore Authentication with: ' + JSON.stringify(options) + ' Current user: ' + userService.get('userName') + ' status: ' + textStatus + ' token: ' + data.token);
               if (!data.token) {
                 flashService.danger('Restore Session Failed');
                 userService.set('token', null);
@@ -31,7 +33,7 @@ export default Base.extend({
                 //console.log('####   Restore Response data: ' + JSON.stringify(data));
                 reject();
               } else {
-                //console.log('@@@@ Restore UserName: '+options.identification+' token: '+data.token);
+                console.log('@@@@ Restore UserName: '+options.identification+' token: '+data.token);
                 userService.set('userName', options.identification);
                 userService.set('token', data.token);
                 userService.set('userDetails', data.user);
@@ -43,12 +45,14 @@ export default Base.extend({
           error: function (jqXHR, textStatus, error) {
             /*jshint unused:vars */
             Ember.run(function() {
-              flashService.danger('Restore Session Failed');
-              userService.set('token', null);
-              userService.set('userName', null);
               if (jqXHR.status !== 401 && jqXHR.status !== 403) {
                 console.log('#### Error in authentication: ' + textStatus + ' ' + error);
               }
+              userService.set('lastStatus', jqXHR.status);
+              userService.set('lastResponse', jqXHR.responseBody);
+              flashService.danger('Restore Session Failed');
+              userService.set('token', null);
+              userService.set('userName', null);
               reject(error);
             });
           },
@@ -74,9 +78,11 @@ export default Base.extend({
         jQuery.ajax(loginPath, {
           type: 'POST',
           data: authData,
-          success: function (data, textStatus /*, jqXHR */) {
+          success: function (data, textStatus, jqXHR) {
             Ember.run(function() {
-              //console.log('@@@@ Login Authentication with: ' + JSON.stringify(options) + ' Current user: ' + userService.get('userName') + ' status: ' + textStatus + ' token: ' + data.token);
+            userService.set('lastStatus', jqXHR.status);
+            userService.set('lastResponse', jqXHR.responseBody);
+              console.log('@@@@ Login Authentication with: ',identification,',',password,' Current user: ' + userService.get('userName') + ' status: ' + textStatus + ' token: ' + data.token);
               if (!data.token) {
                 //console.log('####   Login Response data: ' + JSON.stringify(data));
                 flashService.danger('Login Failed');
@@ -85,7 +91,7 @@ export default Base.extend({
                 reject();
               } else {
                 Ember.run(function () {
-                  //console.log('@@@@ Login UserName: '+options.identification+' token: '+data.token);
+                  console.log('@@@@ Login UserName: '+identification+' token: '+data.token);
                   userService.set('userName', identification);
                   flashService.success('Login Successful', {timeout: 5000});
                   userService.set('token', data.token);
@@ -99,12 +105,15 @@ export default Base.extend({
           error: function (jqXHR, textStatus, error) {
             /*jshint unused:vars */
             Ember.run(function() {
-              flashService.danger('Login Failed');
-              userService.set('token', null);
-              userService.set('userName', null);
               if (jqXHR.status !== 401 && jqXHR.status !== 403) {
                 console.log('#### Error in authentication: ' + textStatus + ' ' + error);
               }
+              userService.set('lastStatus', jqXHR.status);
+              userService.set('lastResponse', jqXHR.responseText);
+              console.log('#### Response on error: ',jqXHR.responseText);
+              flashService.danger('Login Failed');
+              userService.set('token', null);
+              userService.set('userName', null);
               reject(error);
             });
           },

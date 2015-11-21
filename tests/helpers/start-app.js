@@ -1,27 +1,15 @@
-
 import Ember from 'ember';
 import Application from '../../app';
-import Router from '../../router';
 import config from '../../config/environment';
-import DS from 'ember-data';
 
-// soon, we wont need this.
-// resolve vs require ordering quirk (long running bug)
+export default function startApp(attrs) {
+  let application;
 
-export default function startApp(attrs, cb) {
-  var application;
-
-  var attributes = Ember.merge({}, config.APP);
+  let attributes = Ember.merge({}, config.APP);
   attributes = Ember.merge(attributes, attrs); // use defaults, but you can override;
 
-  Ember.run(function() {
-    application = Application.extend({
-      init() {
-        this._super(...arguments);
-        if (typeof cb === 'function') { cb(this); }
-      }
-    }).create(attributes);
-
+  Ember.run(() => {
+    application = Application.create(attributes);
     application.setupForTesting();
     application.injectTestHelpers();
   });

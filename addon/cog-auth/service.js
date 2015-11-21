@@ -8,5 +8,7 @@ export default Ember.Service.extend({
   userName: null,
   userDetails: null,
   modelName: null,
-  token: null
+  token: null,
+  lastStatus: null,
+  lastReponse: null
 });
