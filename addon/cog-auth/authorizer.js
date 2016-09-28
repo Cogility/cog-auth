@@ -9,7 +9,7 @@ export default Base.extend({
     /*jshint unused:vars */
     var userService = this.get('user');
     var token = userService.get('token');
-    console.log('@@@@ Authorizing server request with token '+token);
+    // console.log('@@@@ Authorizing server request with token '+token);
     func('Authorization', token);
   }
 });

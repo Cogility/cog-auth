@@ -22,7 +22,7 @@ export default Base.extend({
     var flashService = this.get('flashes');
     return new Ember.RSVP.Promise(function(resolve, reject) {
       try {
-        console.log('@@@@ Restoring from saved data: ',data);
+        // console.log('@@@@ Restoring from saved data: ',data);
         Ember.run(function() {
           if (!data.token) {
             userService.set('lastStatus', 200);
@@ -32,7 +32,7 @@ export default Base.extend({
             userService.set('userName', null);
             reject();
           } else {
-            console.log('@@@@ Restore UserName: '+data.identification+' token: '+data.token);
+            // console.log('@@@@ Restore UserName: '+data.identification+' token: '+data.token);
             userService.set('lastStatus', null);
             userService.set('lastResponse', null);
             userService.set('userName', data.identification);
@@ -77,16 +77,16 @@ export default Base.extend({
             Ember.run(function() {
             userService.set('lastStatus', jqXHR.status);
             userService.set('lastResponse', jqXHR.responseBody);
-              console.log('@@@@ Login Authentication with: ',identification,',',password,' Current user: ' + userService.get('userName') + ' status: ' + textStatus + ' token: ' + data.token);
+              // console.log('@@@@ Login Authentication with: ',identification,',',password,' Current user: ' + userService.get('userName') + ' status: ' + textStatus + ' token: ' + data.token);
               if (!data.token) {
-                //console.log('####   Login Response data: ' + JSON.stringify(data));
+                console.log('####   Login Response data: ' + JSON.stringify(data));
                 flashService.danger('Login Failed');
                 userService.set('token', null);
                 userService.set('userName', null);
                 reject();
               } else {
                 Ember.run(function () {
-                  console.log('@@@@ Login UserName: '+identification+' token: '+data.token);
+                  // console.log('@@@@ Login UserName: '+identification+' token: '+data.token);
                   userService.set('userName', identification);
                   flashService.success('Login Successful', {timeout: 5000});
                   userService.set('token', data.token);
@@ -126,8 +126,61 @@ export default Base.extend({
         reject(err);
       }
     });
+  },
+
+  /**
+   * Invalidate the session (log out).
+   * @param {object} data - The session data
+   */
+  invalidate: function(data) {
+    var userService = this.get("user");
+    var flashService = this.get('flashes');
+    return new Ember.RSVP.Promise(function(resolve, reject) {
+      try {
+        var logoutPath = '/security/logout?token='+data.token;
+        let authData = {username: data.identification};
+        // console.log('@@@@ Invalidating session.  Logout with token: ',data.token,' path: ',logoutPath)
+        jQuery.ajax(logoutPath, {
+          type: 'POST',
+          data: authData,
+          success: function (responseData, textStatus, jqXHR) {
+            Ember.run(function() {
+              userService.set('lastStatus', jqXHR.status);
+              userService.set('lastResponse', jqXHR.responseBody);
+              // console.log('@@@@ Logout with: ',data.identification);
+              userService.set('token', null);
+              userService.set('userName', null);
+              resolve({identification: data.identification,
+                token: null,
+                modelName: null,
+                user: null
+              });
+            });
+          },
+          error: function (jqXHR, textStatus, error) {
+            /*jshint unused:vars */
+            Ember.run(function() {
+              if (jqXHR.status !== 401 && jqXHR.status !== 403) {
+                console.log('#### Error in authentication: ' + textStatus + ' ' + error);
+              }
+              userService.set('lastStatus', jqXHR.status);
+              userService.set('lastResponse', jqXHR.responseText);
+              console.log('#### Response on error: ',jqXHR.responseText);
+              flashService.danger('Login Failed');
+              userService.set('token', null);
+              userService.set('userName', null);
+              reject(error);
+            });
+          },
+          dataType: 'json'
+        });
+      } catch (err) {
+        console.log('#### Error in authenticator: '+err, err.stackTrace);
+        flashService.danger('Login Failed');
+        userService.set('token', null);
+        userService.set('userName', null);
+        reject(err);
+      }
+    });
   }
-  //invalidate: function(data) {
-  //  …
-  //}
 });
