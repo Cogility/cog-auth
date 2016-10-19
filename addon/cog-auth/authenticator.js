@@ -160,26 +160,31 @@ export default Base.extend({
           error: function (jqXHR, textStatus, error) {
             /*jshint unused:vars */
             Ember.run(function() {
-              if (jqXHR.status !== 401 && jqXHR.status !== 403) {
-                console.log('#### Error in authentication: ' + textStatus + ' ' + error);
-              }
+              console.log('#### Error in invalidate: '+error, error.stackTrace);
               userService.set('lastStatus', jqXHR.status);
               userService.set('lastResponse', jqXHR.responseText);
-              console.log('#### Response on error: ',jqXHR.responseText);
-              flashService.danger('Login Failed');
               userService.set('token', null);
               userService.set('userName', null);
-              reject(error);
+              // Resolve on error to prevent loop trying to log out on error
+              resolve({identification: data.identification,
+                token: null,
+                modelName: null,
+                user: null
+              });
             });
           },
           dataType: 'json'
         });
       } catch (err) {
-        console.log('#### Error in authenticator: '+err, err.stackTrace);
-        flashService.danger('Login Failed');
+        console.log('#### Error in invalidate: '+err, err.stackTrace);
         userService.set('token', null);
         userService.set('userName', null);
-        reject(err);
+        // Resolve on error to prevent loop trying to log out on error
+        resolve({identification: data.identification,
+          token: null,
+          modelName: null,
+          user: null
+        });
       }
     });
   }
